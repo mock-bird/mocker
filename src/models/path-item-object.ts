@@ -1,15 +1,17 @@
+import { OperationObject } from "./operation-object";
+
 export interface PathItemObject {
     $ref?: string;
     summary?: string;
     description?: string;
-    get: object;
-    put: object;
-    post: object;
-    delete: object;
-    options: object;
-    head: object;
-    patch: object;
-    trace: object;
-    servers: object[];
-    parameters: object;
+    get?: OperationObject;
+    put?: OperationObject;
+    post?: OperationObject;
+    delete?: OperationObject;
+    options?: OperationObject;
+    head?: OperationObject;
+    patch?: OperationObject;
+    trace?: OperationObject;
+    servers?: object[];
+    parameters?: object;
 }

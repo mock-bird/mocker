@@ -1,3 +1,5 @@
+import { PathItemObject } from "./path-item-object";
+
 export interface PathsObject {
-    [key: string]: object;
+    [path: string]: PathItemObject;
 }
