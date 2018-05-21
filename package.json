@@ -4,7 +4,7 @@
   "description": "Mock server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/mock-bird/mocker/issues"
   },
-  "homepage": "https://github.com/mock-bird/mocker#readme"
+  "homepage": "https://github.com/mock-bird/mocker#readme",
+  "devDependencies": {
+    "nodemon": "^1.17.4",
+    "ts-node": "^6.0.3",
+    "typescript": "^2.8.3"
+  }
 }
