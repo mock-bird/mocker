@@ -1,4 +1,5 @@
 import { SchemaObject } from "./schema-object";
+import { MediaTypeObject } from "./media-type-object";
 
 export interface ParameterObject {
     name: string;
@@ -13,5 +14,5 @@ export interface ParameterObject {
     schema?: SchemaObject;
     example?: any;
     examples?: {[example: string]: object};
-    content?: {[mediaType: string]: object};
+    content?: {[mediaType: string]: MediaTypeObject};
 }
