@@ -11,7 +11,9 @@ const openAPIObject: OpenAPIObject = {
     },
     paths: {
         '/': {
-            get: {}
+            get: {
+                 description: 'Root endpoint to fetch api version'
+            }
         },
         '/paths': {
             get: {},
@@ -24,12 +26,17 @@ Object.keys(openAPIObject.paths).forEach((path: string) => {
     const pathItem = openAPIObject.paths[path];
 
     if (pathItem.get) {
+        console.log(`GET => ${path}`)
         app.get(path, (req, res) => {
             res.json(pathItem);
         })
     }
+
+    if (pathItem.post) {
+        console.log(`POST => ${path}`)
+    }
 })
 
 app.listen(8080, () => {
-    console.log('Work!');
+    console.log(`Mock of '${openAPIObject.info.title}:${openAPIObject.info.version}' started on port 8080`);
 });
