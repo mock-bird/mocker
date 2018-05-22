@@ -1,5 +1,6 @@
 import { ParameterObject } from "./parameter-object";
 import { RequestBodyObject } from "./request-body-object";
+import { ResponsesObject } from "./responses-object";
 
 export interface OperationObject {
     tags?: string[];
@@ -9,7 +10,7 @@ export interface OperationObject {
     operationId?: string;
     parameters?: ParameterObject[];
     requestBody?: RequestBodyObject;
-    responses?: object;
+    responses?: ResponsesObject;
     callbacks?: object;
     deprecated?: boolean;
     security?: object[];
