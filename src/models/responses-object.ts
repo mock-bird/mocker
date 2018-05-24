@@ -1,4 +1,6 @@
+import { ResponseObject } from "./response-object";
+
 export interface ResponsesObject {
-    default?: object;
-    [statusCode: string]: object | any;
+    default?: ResponseObject;
+    [statusCode: string]: ResponseObject | any;
 }
