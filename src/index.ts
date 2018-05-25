@@ -1,42 +1,19 @@
 import * as express from 'express';
 import { OpenAPIObject } from './models/open-api-object';
+import {openSync} from 'fs';
+import { App } from './app';
 
 const app: express.Application = require('express')();
 
-const openAPIObject: OpenAPIObject = {
-    openapi: '3.0.1',
-    info: {
-        title: 'open api test',
-        version: '0.0.1'
-    },
-    paths: {
-        '/': {
-            get: {
-                 description: 'Root endpoint to fetch api version'
-            }
-        },
-        '/paths': {
-            get: {},
-            post: {}
-        }
-    }
-}
+const mockApp = new App(app);
 
-Object.keys(openAPIObject.paths).forEach((path: string) => {
-    const pathItem = openAPIObject.paths[path];
-
-    if (pathItem.get) {
-        console.log(`GET => ${path}`)
-        app.get(path, (req, res) => {
-            res.json(pathItem);
-        })
-    }
-
-    if (pathItem.post) {
-        console.log(`POST => ${path}`)
-    }
-})
+app.all('/**', (req, res) => {
+    res.status(404).json({
+        status: 404,
+        message: `Path '${req.originalUrl}' not specified in API definition.`
+    });
+});
 
 app.listen(8080, () => {
-    console.log(`Mock of '${openAPIObject.info.title}:${openAPIObject.info.version}' started on port 8080`);
+    console.log('Mock started on port 8080');
 });
