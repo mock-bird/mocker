@@ -1,6 +1,6 @@
-import { PathItemObject } from "./models/path-item-object";
+import { PathItemObject } from "../models/path-item-object";
 import {Request, Response} from 'express';
-import { OperationObject } from "./models/operation-object";
+import { OperationObject } from "../models/operation-object";
 
 export class MockService {
 

@@ -1,6 +1,8 @@
 import { Application } from "express";
-import { MockService } from "./mock.service";
+import { MockService } from "./services/mock.service";
 import { FileService } from "./services/file.service";
+import { OpenAPIObject } from "./models/open-api-object";
+import { PathsObject } from "./models/paths-object";
 
 export class App {
 
@@ -10,18 +12,26 @@ export class App {
 
     constructor(app: Application) {
         this.app = app;
-        this.initialize();
+        this.loadFile('/Users/kklimczak/workspace/mocker/src/example.yml');
     }
 
-    initialize() {
-        this.preparePaths();
+    loadFile(path: string) {
+        this.fileService.getOpenAPIFile('/Users/kklimczak/workspace/mocker/src/example.yml')
+        .subscribe(
+            openAPIObject => this.initialize(openAPIObject),
+            error => console.log(error)
+        );
     }
 
-    private preparePaths() {
-        const paths = this.fileService.getOpenAPIFile('./').paths;
+    initialize(openAPIObject: OpenAPIObject) {
+        this.preparePaths(openAPIObject.paths);
+    }
+
+    private preparePaths(paths: PathsObject) {
         Object.keys(paths)
         .forEach((path) => {
             const pathItem = paths[path];
+            console.log(`GET => ${path}`)
 
             if (pathItem.get) {
                 this.app.get(this.mockService.parseParamsInPath(path), this.mockService.mockGetEndpoint(path, pathItem.get));

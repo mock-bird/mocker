@@ -7,12 +7,12 @@ const app: express.Application = require('express')();
 
 const mockApp = new App(app);
 
-app.all('/**', (req, res) => {
-    res.status(404).json({
-        status: 404,
-        message: `Path '${req.originalUrl}' not specified in API definition.`
-    });
-});
+// app.all('/**', (req, res) => {
+//     res.status(404).json({
+//         status: 404,
+//         message: `Path '${req.originalUrl}' not specified in API definition.`
+//     });
+// });
 
 app.listen(8080, () => {
     console.log('Mock started on port 8080');
