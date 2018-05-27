@@ -3,11 +3,13 @@ import { MockService } from "./services/mock.service";
 import { FileService } from "./services/file.service";
 import { OpenAPIObject } from "./models/open-api-object";
 import { PathsObject } from "./models/paths-object";
+import { ComponentsService } from "./services/components.service";
 
 export class App {
 
     private app: Application;
-    private mockService: MockService = new MockService();
+    private componentsService: ComponentsService = new ComponentsService();
+    private mockService: MockService = new MockService(this.componentsService);
     private fileService: FileService = new FileService();
 
     constructor(app: Application) {
@@ -24,6 +26,9 @@ export class App {
     }
 
     initialize(openAPIObject: OpenAPIObject) {
+        if (openAPIObject.components) {
+            this.componentsService.registerComponents(openAPIObject.components);
+        }
         this.preparePaths(openAPIObject.paths);
     }
 
