@@ -2,13 +2,19 @@ import 'mocha';
 import { expect } from 'chai';
 import { MockService } from '../../app/services/mock.service';
 import { OperationObject } from '../../app/models/operation-object';
+import { FileService } from '../../app/services/file.service';
+import { OpenAPIObject } from '../../app/models/open-api-object';
 
 describe('MockService', () => {
 
     let mockService: MockService;
+    let operation: OperationObject;
+    let fileService: FileService = new FileService();
+    const openAPIObject: OpenAPIObject = fileService.getOpenAPIFileSync('/Users/kklimczak/workspace/mocker/example.yml');
 
     beforeEach(() => {
         mockService = new MockService();
+        operation = openAPIObject.paths['/pets/{petId}'].get as OperationObject;
     })
 
     it('parseParamsInPath() should replace brackets params to params with colon', () => {
@@ -29,49 +35,3 @@ describe('MockService', () => {
     })
 
 });
-
-const operation: OperationObject = {
-    "summary": "Info for a specific pet",
-    "operationId": "showPetById",
-    "tags": [
-        "pets"
-    ],
-    "parameters": [
-        {
-            "name": "petId",
-            "in": "path",
-            "required": true,
-            "description": "The id of the pet to retrieve",
-            "schema": {
-                "type": "string"
-            }
-        }
-    ],
-    "responses": {
-        "200": {
-            "description": "Expected response to a valid request",
-            "content": {
-                "application/json": {
-                    "schema": {
-                        "required": [
-                            "id",
-                            "name"
-                        ],
-                        "properties": {
-                            "id": {
-                                "type": "integer",
-                                "format": "int64"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "tag": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}

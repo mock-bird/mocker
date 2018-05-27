@@ -35,6 +35,10 @@ export class MockService {
                         break;
                     }
                 }
+            } else {
+                if (Date.now() % 2 === 0) {
+                    response[key] = 'tag';
+                }
             }
         });
 

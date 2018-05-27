@@ -1,4 +1,4 @@
-import {readFile} from 'fs';
+import {readFile, readFileSync} from 'fs';
 import { OpenAPIObject } from "../models/open-api-object";
 import { parse } from 'yamljs';
 import { Observable, Observer } from 'rxjs';
@@ -17,5 +17,9 @@ export class FileService {
                 observer.complete();
             })
         })
+    }
+
+    getOpenAPIFileSync(path: string): OpenAPIObject {
+        return parse(readFileSync(path).toString());
     }
 }
