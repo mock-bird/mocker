@@ -10,7 +10,7 @@ export interface OperationObject {
     operationId?: string;
     parameters?: ParameterObject[];
     requestBody?: RequestBodyObject;
-    responses?: ResponsesObject;
+    responses: ResponsesObject;
     callbacks?: object;
     deprecated?: boolean;
     security?: object[];

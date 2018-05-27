@@ -12,11 +12,11 @@ export class App {
 
     constructor(app: Application) {
         this.app = app;
-        this.loadFile('/Users/kklimczak/workspace/mocker/src/example.yml');
+        this.loadFile('/Users/kklimczak/workspace/mocker/example.yml');
     }
 
     loadFile(path: string) {
-        this.fileService.getOpenAPIFile('/Users/kklimczak/workspace/mocker/src/example.yml')
+        this.fileService.getOpenAPIFile(path)
         .subscribe(
             openAPIObject => this.initialize(openAPIObject),
             error => console.log(error)
