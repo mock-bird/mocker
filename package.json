@@ -34,6 +34,7 @@
     "nodemon": "^1.17.4",
     "ts-node": "^6.0.3",
     "tslint": "^5.10.0",
+    "tsuml": "0.0.1-alpha.8",
     "typescript": "^2.8.3"
   },
   "dependencies": {

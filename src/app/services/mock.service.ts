@@ -1,20 +1,20 @@
-import { PathItemObject } from "../models/path-item-object";
-import { Request, Response } from 'express';
-import { OperationObject } from "../models/operation-object";
-import { ParameterObject } from "../models/parameter-object";
-import { ComponentsService } from "./components.service";
-import { SchemaObject } from "../models/schema-object";
-import { ReferenceObject } from "../models/reference-object";
+import {Request, Response} from 'express';
+import {OperationObject} from "../models/operation-object";
+import {ComponentsService} from "./components.service";
+import {SchemaObject} from "../models/schema-object";
+import {ReferenceObject} from "../models/reference-object";
+import {DbService} from "./db.service";
 
 export class MockService {
 
-    constructor(private componentsService: ComponentsService) {
+    constructor(private componentsService: ComponentsService, private db: DbService) {
     }
 
     mockGetEndpoint(path: string, getOperation: OperationObject) {
         return (req: Request, res: Response) => {
+            console.log(path);
             res.json(this.prepareGetResponse(getOperation, path, req.params));
-        }
+        };
     }
 
     parseParamsInPath(path: string): string {
@@ -23,34 +23,25 @@ export class MockService {
 
     prepareGetResponse(operationObject: OperationObject, path: string, pathParams: { [key: string]: any }): any {
         const status = Object.keys(operationObject.responses)[0];
-        let schema = operationObject.responses[status].content['application/json'].schema;
+        const schema = operationObject.responses[status].content['application/json'].schema;
 
-        let response: any = this.createMockObjectBySchema(schema);
-
-        return response;
+        return this.db.getElements(path, pathParams);
     }
 
     private createMockObjectBySchema(schemaObject: SchemaObject | ReferenceObject): any {
-        let schema: SchemaObject;
         let response: any = {};
-        if ((schemaObject as ReferenceObject).$ref) {
-            schema = this.componentsService.resolveComponent((schemaObject as ReferenceObject).$ref);
-        } else {
-            schema = schemaObject as SchemaObject;
-        }
+        const schema: SchemaObject = this.resolveSchema(schemaObject);
 
         if (schema.type) {
             switch (schema.type) {
                 case 'array': {
                     if (schema.items) {
-                        response = [
-                            this.createMockObjectBySchema(schema.items)
-                        ];
+                        response = [this.createMockObjectBySchema(schema.items)];
                     } else {
                         throw new SyntaxError('If schema has type `array`, property `items` must be exist');
                     }
+                    break;
                 }
-                break;
             }
         } else if (schema.properties) {
             Object.keys(schema.properties).forEach(key => {
@@ -75,5 +66,9 @@ export class MockService {
         return response;
     }
 
+    private resolveSchema(schemaOrReference: SchemaObject | ReferenceObject): SchemaObject {
+        return (schemaOrReference as ReferenceObject).$ref
+            ? this.componentsService.resolveComponent((schemaOrReference as ReferenceObject).$ref)
+            : schemaOrReference as SchemaObject;
+    }
 }
-
