@@ -5,7 +5,9 @@
     ],
     "jsRules": {},
     "rules": {
-        "quotemark": false
+        "quotemark": false,
+        "member-ordering": false,
+        "arrow-parens": false
     },
     "rulesDirectory": []
 }

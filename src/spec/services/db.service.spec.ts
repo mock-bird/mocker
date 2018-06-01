@@ -1,9 +1,9 @@
-import {DbService} from "../../app/services/db.service";
-import {OpenAPIObject} from "../../app/models/open-api-object";
-import {FileService} from "../../app/services/file.service";
-import 'mocha';
 import {expect} from 'chai';
+import 'mocha';
+import {OpenAPIObject} from "../../app/models/open-api-object";
 import {ComponentsService} from "../../app/services/components.service";
+import {DbService} from "../../app/services/db.service";
+import {FileService} from "../../app/services/file.service";
 
 describe('DbService', () => {
 
@@ -20,9 +20,10 @@ describe('DbService', () => {
         }
     });
 
-    it('should create map with paths and schemas', () => {
-        dbService.assignSchemaToPaths(apiObject.paths);
-        expect(dbService.pathsSchema.size).to.be.equals(1);
+    it('createEntitiesBasedOnPaths() should create entities in map', () => {
+        dbService.createEntitiesBasedOnPaths(apiObject.paths);
+        const response = dbService.getResponse('/pets', {});
+        expect(response).to.be.lengthOf(2);
     });
 
 });

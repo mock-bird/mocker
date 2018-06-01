@@ -9,12 +9,13 @@ import {DbService} from "../../app/services/db.service";
 
 describe('MockService', () => {
 
-    let mockService: MockService;
     const componentsService: ComponentsService = new ComponentsService();
     const dbService: DbService = new DbService(componentsService);
+    const fileService: FileService = new FileService();
+    const openAPIObject: OpenAPIObject = fileService
+        .getOpenAPIFileSync('/Users/kklimczak/workspace/mocker/example.yml');
+    let mockService: MockService;
     let operation: OperationObject;
-    let fileService: FileService = new FileService();
-    const openAPIObject: OpenAPIObject = fileService.getOpenAPIFileSync('/Users/kklimczak/workspace/mocker/example.yml');
 
     beforeEach(() => {
         if (openAPIObject.components) {
@@ -22,11 +23,11 @@ describe('MockService', () => {
         }
         mockService = new MockService(componentsService, dbService);
         operation = openAPIObject.paths['/pets/{petId}'].get as OperationObject;
-    })
+    });
 
     it('parseParamsInPath() should replace brackets params to params with colon', () => {
         const path = '/users/{userId}/books/{bookId}';
-        const expectedPath = '/users/:userId/books/:bookId'
+        const expectedPath = '/users/:userId/books/:bookId';
         expect(mockService.parseParamsInPath(path)).to.equal(expectedPath);
     });
 

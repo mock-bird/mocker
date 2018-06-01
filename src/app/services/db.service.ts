@@ -1,45 +1,47 @@
-import {SchemaObject} from "../models/schema-object";
-import {ReferenceObject} from "../models/reference-object";
-import {ComponentsService} from "./components.service";
-import {PathsObject} from "../models/paths-object";
 import {OperationObject} from "../models/operation-object";
+import {PathsObject} from "../models/paths-object";
+import {ReferenceObject} from "../models/reference-object";
+import {SchemaObject} from "../models/schema-object";
+import {ComponentsService} from "./components.service";
 
 export class DbService {
 
-    pathsSchema: Map<string, any[]> = new Map();
+    private entities: Map<string, any[]> = new Map();
 
     constructor(private componentsService: ComponentsService) {
-
     }
 
-    public getElements(path: string, parameters: any): any {
+    public getResponse(path: string, parameters: any): any {
         const pathParts = path.split('/');
+
         if (this.isPathParameter(this.getLastElement(pathParts))) {
-            const elements = this.pathsSchema.get(pathParts[pathParts.length - 2]);
-            return elements && elements.length ? elements
-                .find(element => element.id == parameters[this.getParamName(this.getLastElement(pathParts))])
-                : {};
+            return this.getSingleElement(pathParts, parameters);
         } else {
-            return this.pathsSchema.get(pathParts[pathParts.length - 1]);
+            return this.entities.get(pathParts[pathParts.length - 1]);
         }
     }
 
-    public assignSchemaToPaths(paths: PathsObject) {
+    private getSingleElement(pathParts: string[], parameters: any) {
+        const elements = this.entities.get(pathParts[pathParts.length - 2]);
+        return elements && elements.length ? elements
+                .find((element) => element.id === +parameters[this.getParamName(this.getLastElement(pathParts))])
+            : {};
+    }
+
+    public createEntitiesBasedOnPaths(paths: PathsObject) {
         Object.keys(paths).forEach(path => {
             if (paths[path].get) {
                 const pathParts = path.split('/');
                 const get: OperationObject = paths[path].get as OperationObject;
                 const schema = this.resolveSchemaOrReference(get.responses[200].content['application/json'].schema);
-                if (this.isPathParameter(pathParts[pathParts.length - 1])) {
-
-                } else {
+                if (!this.isPathParameter(pathParts[pathParts.length - 1])) {
                     if (schema.type === 'array' && schema.items) {
-                        if (!this.pathsSchema.has(pathParts[pathParts.length - 1])) {
+                        if (!this.entities.has(pathParts[pathParts.length - 1])) {
                             let elements: any[] = [];
                             for (let i = 0; i < 2; i++) {
                                 elements = [...elements, this.createSingleEntity(schema.items, i + 1)];
                             }
-                            this.pathsSchema.set(pathParts[pathParts.length - 1], elements);
+                            this.entities.set(pathParts[pathParts.length - 1], elements);
                         }
                     }
                 }
@@ -59,7 +61,7 @@ export class DbService {
                     } else {
                         switch (schema.properties[key].type) {
                             case 'integer': {
-                                response[key] = 3;
+                                response[key] = Math.floor(Math.random() * 10);
                                 break;
                             }
                             case 'string': {
@@ -75,8 +77,6 @@ export class DbService {
                 }
             });
         }
-
-
         return response;
     }
 

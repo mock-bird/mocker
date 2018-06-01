@@ -31,7 +31,7 @@ export class App {
         if (openAPIObject.components) {
             this.componentsService.registerComponents(openAPIObject.components);
         }
-        this.dbService.assignSchemaToPaths(openAPIObject.paths);
+        this.dbService.createEntitiesBasedOnPaths(openAPIObject.paths);
         this.preparePaths(openAPIObject.paths);
     }
 

@@ -25,7 +25,7 @@ export class MockService {
         const status = Object.keys(operationObject.responses)[0];
         const schema = operationObject.responses[status].content['application/json'].schema;
 
-        return this.db.getElements(path, pathParams);
+        return this.db.getResponse(path, pathParams);
     }
 
     private createMockObjectBySchema(schemaObject: SchemaObject | ReferenceObject): any {
